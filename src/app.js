@@ -17,17 +17,33 @@ form.addEventListener('submit', async (event) => {
   console.log(response);
 
   /*
-  some sample code
-    const dataObj = response.results[0];
-    const postImg = clone.querySelector('.post__img');
-    postImg.src = dataObj.urls.small;
-    postImg.alt = dataObj.alt_description;
-  */
-
-  /*
     Loop through the results[] array. For each result, create a clone of the
     template and append it to the DOM element with the .container class.
   */
+  const template = document.querySelector('#template');
+  const container = document.querySelector('.container');
+
+  response.results.forEach((dataObj) => {
+    const clone = template.content.cloneNode(true);
+    const postUser = clone.querySelector('.post__user');
+    const postDesc = clone.querySelector('.post__desc');
+
+    const postImg = clone.querySelector('.post__img');
+    postImg.src = dataObj.urls.small;
+    postImg.alt = dataObj.alt_description;
+
+    postUser.innerText = `by ${dataObj.user.name}`;
+
+    const desc = dataObj.description;
+
+    if (desc === null || desc.length < 101) {
+      postDesc.innerText = desc;
+    } else {
+      postDesc.innerText = `${desc.slice(0, 101)}...`;
+    }
+
+    container.appendChild(clone);
+  });
 
   /*
     Add an attribution statement below the image using the
